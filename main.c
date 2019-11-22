@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:02:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/22 21:00:30 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/23 00:25:35 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int check_base(const char*);
 
 void ft_list_push_front(t_list **begin_list, void *data);
 int ft_list_size(t_list *begin_list);
+void ft_list_sort(t_list **begin_list, int (*cmp)());
 
 int main()
 {
@@ -46,8 +47,8 @@ int main()
 	/* char *d = "bonjourasdfasdf"; */
 	/* printf("%s\n", ft_strcpy(c, d)); */
 	/* printf("%s\n", c); */
-    /*  */
-	/* char *e = "\x03"; */
+
+	/* char *e = "\x01"; */
 	/* char *f = "\x02"; */
 	/* printf("%d\n", ft_strcmp(e, f)); */
 	/* printf("%d\n",    strcmp(e, f)); */
@@ -66,6 +67,6 @@ int main()
 
 	/* printf("%d\n", check_base("01")); */
 
-	printf("%d\n", ft_atoi_base(" \t\v\r  \n 1012h", "01"));
+	/* printf("%d\n", ft_atoi_base(" \t\v\r  \n 1012h", "01")); */
 	return 0;
 }

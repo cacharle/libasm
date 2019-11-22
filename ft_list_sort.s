@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/22 21:03:52 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/22 21:17:36 by cacharle         ###   ########.fr        #
+#    Updated: 2019/11/22 21:27:27 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,5 +32,20 @@ _ft_list_sort:
 
 
 merge_sorted:
-
-
+#ListNode* mergeTwoLists(ListNode* l1, ListNode* l2)
+#{
+#	ListNode *merged = NULL;
+#
+#	if (l1 == NULL && l2 == NULL)
+#		return NULL;
+#	if (l1 == NULL)
+#		return l2;
+#	if (l2 == NULL)
+#		return l1;
+#	merged = l1->val < l2->val ? l1 : l2;
+#	if (l1->val < l2->val)
+#		merged->next = mergeTwoLists(l1->next, l2);
+#	else
+#		merged->next = mergeTwoLists(l1, l2->next);
+#	return merged;
+#}
