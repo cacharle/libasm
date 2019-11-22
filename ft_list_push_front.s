@@ -1,25 +1,22 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    ft_strlen.s                                        :+:      :+:    :+:    #
+#    ft_list_push_front.s                               :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/11/22 03:04:20 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/22 21:18:30 by cacharle         ###   ########.fr        #
+#    Created: 2019/11/22 20:55:08 by cacharle          #+#    #+#              #
+#    Updated: 2019/11/22 21:17:45 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-.globl _ft_strlen
+.globl _ft_list_push_front
 
-# int ft_strlen(char *);
-_ft_strlen:
-	mov rbx, rdi  # str argument
-	xor rax, rax
-	FT_STRLEN_LOOP:
-		cmp byte ptr [rbx + rax], 0  # compare rbx[rax] and '\0'
-		je FT_STRLEN_RET
-		inc rax
-		jmp FT_STRLEN_LOOP
- 	FT_STRLEN_RET:
- 		ret
+# void ft_list_push_front(t_list **begin_list, void *data);
+_ft_list_push_front:
+	cmp rdi, 0
+	je FT_LIST_PUSH_FRONT_END
+	mov [rsi + 8], [rdi]
+	mov [rdi], rsi
+	FT_LIST_PUSH_FRONT_END:
+		ret

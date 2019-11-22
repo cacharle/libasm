@@ -1,25 +1,36 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    ft_strlen.s                                        :+:      :+:    :+:    #
+#    ft_list_sort.s                                     :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/11/22 03:04:20 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/22 21:18:30 by cacharle         ###   ########.fr        #
+#    Created: 2019/11/22 21:03:52 by cacharle          #+#    #+#              #
+#    Updated: 2019/11/22 21:17:36 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-.globl _ft_strlen
+.globl _ft_list_sort
 
-# int ft_strlen(char *);
-_ft_strlen:
-	mov rbx, rdi  # str argument
-	xor rax, rax
-	FT_STRLEN_LOOP:
-		cmp byte ptr [rbx + rax], 0  # compare rbx[rax] and '\0'
-		je FT_STRLEN_RET
-		inc rax
-		jmp FT_STRLEN_LOOP
- 	FT_STRLEN_RET:
- 		ret
+# void ft_list_sort(t_list **begin_list, int (*cmp)());
+_ft_list_sort:
+	push rbp
+	mov rbp, rsp
+
+	call _ft_list_size
+	cmp eax, 2
+	jl FT_LIST_SORT_END
+
+	# split in half
+	# _ft_list_sort both half
+	# merge_sorted
+
+
+	FT_LIST_SORT_END:
+		pop rbp
+		ret
+
+
+merge_sorted:
+
+

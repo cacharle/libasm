@@ -6,12 +6,13 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/22 03:04:38 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/22 03:04:39 by cacharle         ###   ########.fr        #
+#    Updated: 2019/11/22 21:18:49 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .globl _ft_strcmp
 
+# int ft_strcmp(const char *s1, const char *s2);
 _ft_strcmp:
 	mov rax, rdi  # s1
 	mov rbx, rsi  # s2

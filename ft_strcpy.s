@@ -6,12 +6,13 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/22 03:04:28 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/22 03:16:19 by cacharle         ###   ########.fr        #
+#    Updated: 2019/11/22 21:18:38 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 .globl _ft_strcpy
 
+# char *ft_strcpy(char *dst, const char *src);
 _ft_strcpy:
 	mov rax, rdi  # dst
 	mov rbx, rsi  # src

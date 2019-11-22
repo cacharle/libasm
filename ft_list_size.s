@@ -1,25 +1,25 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    ft_strlen.s                                        :+:      :+:    :+:    #
+#    ft_list_size.s                                     :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/11/22 03:04:20 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/22 21:18:30 by cacharle         ###   ########.fr        #
+#    Created: 2019/11/22 20:59:52 by cacharle          #+#    #+#              #
+#    Updated: 2019/11/22 21:17:54 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-.globl _ft_strlen
+.globl _ft_list_size
 
-# int ft_strlen(char *);
-_ft_strlen:
-	mov rbx, rdi  # str argument
-	xor rax, rax
-	FT_STRLEN_LOOP:
-		cmp byte ptr [rbx + rax], 0  # compare rbx[rax] and '\0'
-		je FT_STRLEN_RET
-		inc rax
-		jmp FT_STRLEN_LOOP
- 	FT_STRLEN_RET:
- 		ret
+# int ft_list_size(t_list *begin_list);
+_ft_list_size:
+	xor eax, eax
+	FT_LIST_SIZE_LOOP:
+		cmp rdi, 0
+		je FT_LIST_SIZE_END
+		inc eax
+		mov rdi, [rdi + 8]
+		jmp FT_LIST_SIZE_LOOP
+	FT_LIST_SIZE_END
+	ret

@@ -6,12 +6,18 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:02:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/22 05:18:39 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/22 21:00:30 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
+
+typedef struct		s_list
+{
+	void			*data;
+	struct s_list	*next;
+}					t_list;
 
 int ft_strlen(char *);
 char *ft_strcpy(char *dst, const char *src);
@@ -20,6 +26,10 @@ int ft_write(int, const void*, size_t);
 int ft_read(int, void*, size_t);
 char *ft_strdup(const char*);
 int ft_atoi_base(const char*, const char*);
+int check_base(const char*);
+
+void ft_list_push_front(t_list **begin_list, void *data);
+int ft_list_size(t_list *begin_list);
 
 int main()
 {
@@ -31,7 +41,7 @@ int main()
 	/* printf("%d\n", ft_strlen(a)); */
 	/* printf("%d\n", ft_strlen(b)); */
 	/* printf("%d\n", ft_strlen("bonjour")); */
-    /*  */
+
 	/* char c[32] = "bon"; */
 	/* char *d = "bonjourasdfasdf"; */
 	/* printf("%s\n", ft_strcpy(c, d)); */
@@ -53,7 +63,9 @@ int main()
 	/* printf("%s\n", h); */
 	/* free(h); */
 
-	printf("%d\n", ft_atoi_base(" \t\v\r  \n 101h", "01"));
 
+	/* printf("%d\n", check_base("01")); */
+
+	printf("%d\n", ft_atoi_base(" \t\v\r  \n 1012h", "01"));
 	return 0;
 }
