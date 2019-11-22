@@ -1,11 +1,13 @@
+.globl _ft_strcpy
+
 _ft_strcpy:
-	pop ax
-	pop bx
-	mov ecx, eax ; copy
-FT_STRCPY_LOOP:
-	mov [ecx], ebx
-	inc ebx
-	inc ecx
-	cmp ebx, 0
-	jneq FT_STRCPY_LOOP
+	mov rax, rdi  # dst
+	mov rbx, rsi  # src
+	xor rcx, rcx
+	FT_STRCPY_LOOP:
+		mov dl, [rbx + rcx]
+		mov [rax + rcx], dl
+		inc rcx
+		cmp byte ptr [rbx + rcx], 0
+		jne FT_STRCPY_LOOP
 	ret

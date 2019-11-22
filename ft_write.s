@@ -1,4 +1,6 @@
+.globl _ft_write
+
 _ft_write:
-	mov eax, 4
-	int 0x80
+	mov rax, 0x2000004
+	syscall
 	ret
