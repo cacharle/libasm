@@ -14,12 +14,9 @@ global _ft_strlen
 
 ; int ft_strlen(char *);
 _ft_strlen:
-	mov rbx, rdi  ; str argument
-	xor rax, rax
+	mov eax, -1
 	FT_STRLEN_LOOP:
-		cmp byte [rbx + rax], 0  ; compare rbx[rax] and '\0'
-		je FT_STRLEN_RET
-		inc rax
-		jmp FT_STRLEN_LOOP
- 	FT_STRLEN_RET:
- 		ret
+		inc eax
+		cmp byte [rdi + rax], 0  ; compare rbx[rax] and '\0'
+		jne FT_STRLEN_LOOP
+	ret

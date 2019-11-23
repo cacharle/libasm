@@ -6,12 +6,13 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:02:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/23 00:25:35 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/23 02:13:29 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct		s_list
 {
@@ -44,7 +45,9 @@ int main()
 	/* printf("%d\n", ft_strlen("bonjour")); */
 
 	/* char c[32] = "bon"; */
-	/* char *d = "bonjourasdfasdf"; */
+	/* char *d = "b"; */
+    /*  */
+	/* printf("%s\n", c); */
 	/* printf("%s\n", ft_strcpy(c, d)); */
 	/* printf("%s\n", c); */
 
@@ -52,7 +55,7 @@ int main()
 	/* char *f = "\x02"; */
 	/* printf("%d\n", ft_strcmp(e, f)); */
 	/* printf("%d\n",    strcmp(e, f)); */
-    /*  */
+
 	/* ft_write(1, "bon\n", 4); */
     /*  */
 	/* char g[32]; */
@@ -60,9 +63,9 @@ int main()
 	/* g[ret] = 0; */
 	/* printf("%s\n", g); */
     /*  */
-	/* char *h = ft_strdup("bonjour"); */
-	/* printf("%s\n", h); */
-	/* free(h); */
+	char *h = ft_strdup("bonjour");
+	printf("%s\n", h);
+	free(h);
 
 
 	/* printf("%d\n", check_base("01")); */

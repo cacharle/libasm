@@ -16,20 +16,19 @@ extern _malloc
 
 global _ft_strdup
 
-; char *ft_strdup(const char*);
+; char *ft_strdup(const char *str);
 _ft_strdup:
-	push rbp
-	mov rbp, rsp
-	mov rbx, rdi
-	mov rax, rbx
-	call _ft_strlen
-	inc rax
-	mov rdi, rax
+	push rdi         ; save rdi because it will be overwrite for malloc
+
+	call _ft_strlen  ; rdi is still == str
+	inc rax          ; len++ for '\0'
+
+	mov rdi, rax     ; size to malloc
 	call _malloc
-	mov rdi, rax
-	mov rsi, rbx
+
+	pop rsi          ; original str as src
+	mov rdi, rax     ; allocated as dest
 	call _ft_strcpy
-	pop rbp
 	ret
 
 

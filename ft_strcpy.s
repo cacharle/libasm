@@ -14,14 +14,17 @@ global _ft_strcpy
 
 ; char *ft_strcpy(char *dst, const char *src);
 _ft_strcpy:
+	push rbx
+	push rcx
 	mov rax, rdi  ; dst
 	mov rbx, rsi  ; src
-	xor rcx, rcx
+	mov rcx, -1
 	FT_STRCPY_LOOP:
-		mov dl, [rbx + rcx]
-		mov [rax + rcx], dl
 		inc rcx
+		mov dl, byte [rbx + rcx]
+		mov byte [rax + rcx], dl
 		cmp byte [rbx + rcx], 0
 		jne FT_STRCPY_LOOP
-	mov byte [rax + rcx], 0
+	pop rcx
+	pop rbx
 	ret

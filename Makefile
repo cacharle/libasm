@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/22 02:56:22 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/23 00:27:22 by cacharle         ###   ########.fr        #
+#    Updated: 2019/11/23 02:31:39 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ RM = rm -f
 LIB = ar rcs
 
 CC = gcc
-CCFLAGS = -Wall -Wextra
+CCFLAGS = -Wall -Wextra -fomit-frame-pointer
 
 NASM = nasm
 NASMFLAGS = -f macho64
