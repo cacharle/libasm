@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:02:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/23 02:13:29 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/23 04:33:27 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,13 @@ int main()
 	/* g[ret] = 0; */
 	/* printf("%s\n", g); */
     /*  */
-	char *h = ft_strdup("bonjour");
-	printf("%s\n", h);
-	free(h);
+	/* char *h = ft_strdup("bonjour"); */
+	/* printf("%s\n", h); */
+	/* free(h); */
 
 
 	/* printf("%d\n", check_base("01")); */
 
-	/* printf("%d\n", ft_atoi_base(" \t\v\r  \n 1012h", "01")); */
+	printf("%d\n", ft_atoi_base(" \t\n\r\v\f\r 010\t0101001", "01"));
 	return 0;
 }

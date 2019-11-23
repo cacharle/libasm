@@ -14,103 +14,119 @@ extern _ft_strlen
 
 global _ft_atoi_base
 
-; int ft_atoi_base(const char*, const char*);
+; int ft_atoi_base(const char *str, const char *base);
 _ft_atoi_base:
-	push rbp      ; save previous stackframe
-	mov rbp, rsp  ; create new one
+	mov r12, rdi  ; r12 = str
+	mov r13, rsi  ; r13 = base
 
-	mov rbx, rdi  ; rbx = str
-	mov rcx, rsi  ; rcx = base
-
-	mov rdi, rcx
+	; check if the base is valid
+	mov rdi, r13
 	call _check_base
 	cmp rax, 0
-	je CHECK_BASE_ERROR
+	je CHECK_BASE_FALSE
 
-	mov rdi, rcx
-	call _ft_strlen 
-	;mov r8, rax  ; r8 = radix
-	;mov rax, r8
 
-	xor rdx, rdx  ; rdx = 0
-	FT_ATOI_BASE_SPACE_LOOP:  ; remove spaces
-		mov rdi, [rbx]
-		call ft_isspace
+	; ignore space in front
+	mov r15, -1  ; str index
+	FT_ATOI_BASE_IGNORE_SPACES:
+		inc r15
+		mov dil, byte [r12 + r15]
+		call _ft_isspace
 		cmp rax, 1
-		jne FT_ATOI_BASE_SPACE_LOOP_END
-		inc rbx
-		jmp FT_ATOI_BASE_SPACE_LOOP
-	FT_ATOI_BASE_SPACE_LOOP_END:
+		je FT_ATOI_BASE_IGNORE_SPACES
 
-	xor rax, rax  ; rax = 0
-	xor rdx, rdx  ; rdx = 0
+
+	; cmp byte [r12 + r15], 0x2d
+	; mov r11, zf ; r11 = is negative
+
+	mov rdi, r13
+	call _ft_strlen
+	mov r14, rax  ; r14 = radix
+
+	xor rcx, rcx  ; return value
 	FT_ATOI_BASE_LOOP:
-		cmp byte [rbx], 30h ; while isdigit
-		jl FT_ATOI_BASE_END     ; if *rbx < '0' jmp end
-		cmp byte [rbx], 39h
-		ja FT_ATOI_BASE_END     ; if *rbx > '9' jmp end
+		mov sil, [r12 + r15]
+		call _base_pos  ; get value of the current char int the base
+		cmp rax, -1     ; if is not in base break
+		je FT_ATOI_BASE_LOOP_END
 
-		imul eax, 10            ; eax *= 10, shift previous digits
-		mov dl, byte [rbx]
-		and dl, 0x0F            ; char to digit
-		add eax, edx            ; insert as first digit
-		inc rbx
+		imul rcx, r14   ; multiply by the radix
+		add rcx, rax    ; add the current value
+		inc r15
 		jmp FT_ATOI_BASE_LOOP
-	FT_ATOI_BASE_END:
-	pop rbp
+	FT_ATOI_BASE_LOOP_END:
+	mov rax, rcx
 	ret
-		
+
+
+; rdi: char *base
+; sil: char searched
 _base_pos:
-	mov rcx, rsi
-	xor rax, rax
+	mov rax, -1
 	BASE_POS_LOOP:
-		cmp byte [rdi + rax], 0
+		inc rax
+		cmp byte [rdi + rax], 0    ; if '\0' char not in base
 		je BASE_POS_NOT_FOUND
-		cmp cl, byte [rdi + rax]
-		je BASE_POS_FOUND
-		inc eax
-		jmp BASE_POS_LOOP
-	BASE_POS_NOT_FOUND:
-		mov eax, 0xFFFFFFFF
-	BASE_POS_FOUND:
-		ret
-
-_check_base:
-	push rbx
-	mov rbx, rsp
-
-	mov rbx, rdi  ; rbx = str
-
-	call _ft_strlen  ; f strlen(rbx) < 2
-	cmp eax, 2
-	jl CHECK_BASE_ERROR
-
-	CHECK_BASE_LOOP:
-		cmp byte [rbx], 2bh  ;  *rbx == '-' || *rbx == '+'
-		je CHECK_BASE_ERROR
-		cmp byte [rbx], 2dh
-		je CHECK_BASE_ERROR
-		call ft_isspace
-		cmp rax, 1
-		je CHECK_BASE_ERROR
-			
-		inc rbx
-		cmp byte [rbx], 0h
-		jne CHECK_BASE_LOOP
-	mov rax, 1
-	pop rbx
+		cmp sil, byte [rdi + rax]  ; loop until '\0' or found
+		jne BASE_POS_LOOP
 	ret
-	CHECK_BASE_ERROR:
-		xor rax, rax
-		pop rbx
+	BASE_POS_NOT_FOUND:
+		mov rax, -1
 		ret
 
-ft_isspace:
-	cmp byte [rdi], 20h  ; if space jump next
+
+; rdi: char *base
+_check_base:
+	; check for empty or size 1 base
+	push rdi
+	call _ft_strlen
+	pop rdi
+	cmp rax, 2
+	jl CHECK_BASE_FALSE
+
+	xor rcx, rcx                    ; rcx = index
+	CHECK_BASE_LOOP:
+		cmp byte [rdi + rcx], 0
+		je CHECK_BASE_LOOP_END
+		cmp byte [rdi + rcx], 0x2b  ; check '+'
+		je CHECK_BASE_FALSE
+		cmp byte [rdi + rcx], 0x2d  ; check '-'
+		je CHECK_BASE_FALSE
+
+		push rdi               ; save base
+		mov dil, [rdi + rcx]   ; pass current char as argument
+		call _ft_isspace
+		pop rdi                ; recover base
+		cmp rax, 1
+		je CHECK_BASE_FALSE    ; check for spaces
+
+		; check for duplicates in base
+		mov rdx, rcx                                ; index from curr +1
+		CHECK_BASE_DUP_LOOP:
+			inc rdx
+			mov r10b, byte [rdi + rcx]  ; r10b = checked char
+			cmp r10b, byte [rdi + rdx]  ; check if found dup
+			je CHECK_BASE_FALSE
+			cmp byte [rdi + rdx], 0                 ; if \0 end dup check
+			jne CHECK_BASE_DUP_LOOP
+
+		inc rcx
+		jmp CHECK_BASE_LOOP
+	CHECK_BASE_LOOP_END:
+
+	mov rax, 1
+	ret
+	CHECK_BASE_FALSE:
+		xor rax, rax
+		ret
+
+
+; dil: char c
+_ft_isspace:
+	cmp dil, 20h  ; if space jump next
 	je ISSPACE_TRUE_END
-	mov dl, byte [rdi]  ; if \t\n\r\v\f jump next
-	sub dl, 9h
-	cmp dl, 5h
+	sub dil, 9h
+	cmp dil, 5h
 	jl ISSPACE_TRUE_END
 	xor rax, rax
 	ret
