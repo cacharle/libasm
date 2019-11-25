@@ -16,15 +16,15 @@ global _ft_strcpy
 _ft_strcpy:
 	push rbx
 	push rcx
-	mov rax, rdi  ; dst
-	mov rbx, rsi  ; src
-	mov rcx, -1
-	FT_STRCPY_LOOP:
-		inc rcx
-		mov dl, byte [rbx + rcx]
-		mov byte [rax + rcx], dl
-		cmp byte [rbx + rcx], 0
-		jne FT_STRCPY_LOOP
-	pop rcx
-	pop rbx
+	mov  rax, rdi  ; dst
+	mov  rbx, rsi  ; src
+	mov  rcx, -1
+FT_STRCPY_LOOP:
+	inc  rcx
+	mov  dl, byte [rbx + rcx]
+	mov  byte [rax + rcx], dl
+	cmp  byte [rbx + rcx], 0
+	jne  FT_STRCPY_LOOP
+	pop  rcx
+	pop  rbx
 	ret

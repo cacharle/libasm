@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:02:24 by cacharle          #+#    #+#             */
-/*   Updated: 2019/11/23 04:33:27 by cacharle         ###   ########.fr       */
+/*   Updated: 2019/11/25 03:29:53 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int ft_write(int, const void*, size_t);
 int ft_read(int, void*, size_t);
 char *ft_strdup(const char*);
 int ft_atoi_base(const char*, const char*);
-int check_base(const char*);
 
 void ft_list_push_front(t_list **begin_list, void *data);
 int ft_list_size(t_list *begin_list);
@@ -62,14 +61,16 @@ int main()
 	/* int ret = ft_read(0, g, 2); */
 	/* g[ret] = 0; */
 	/* printf("%s\n", g); */
-    /*  */
+
 	/* char *h = ft_strdup("bonjour"); */
+	/* printf("%d\n", h); */
 	/* printf("%s\n", h); */
 	/* free(h); */
-
+    /*  */
 
 	/* printf("%d\n", check_base("01")); */
 
-	printf("%d\n", ft_atoi_base(" \t\n\r\v\f\r 010\t0101001", "01"));
+	/* printf("%d\n", ft_atoi_base(" \t\n\r\v\f\r 10\t0101001", "01")); */
+	printf("_%d_\n", ft_atoi_base(" 755x+", "01234567"));
 	return 0;
 }
