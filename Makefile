@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/22 02:56:22 by cacharle          #+#    #+#              #
-#    Updated: 2019/11/25 04:46:29 by cacharle         ###   ########.fr        #
+#    Updated: 2020/02/05 21:15:19 by cacharle         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ NASMFLAGS = -f macho64
 NAME = libasm.a
 ASMSRC = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s \
 		 ft_strdup.s ft_atoi_base.s ft_list_push_front.s \
-		 ft_list_size.s ft_list_sort.s ft_list_remove_if.s
+		 ft_list_size.s #ft_list_sort.s ft_list_remove_if.s
 ASMOBJ = $(ASMSRC:.s=.o)
 
 all: $(NAME)
