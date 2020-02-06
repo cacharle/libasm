@@ -21,5 +21,5 @@ FT_LIST_SIZE_LOOP:
 	inc eax
 	mov rdi, [rdi + 8]
 	jmp FT_LIST_SIZE_LOOP
-FT_LIST_SIZE_END
+FT_LIST_SIZE_END:
 	ret

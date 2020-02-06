@@ -12,106 +12,115 @@
 
 global _ft_list_sort
 
-; void ft_list_sort(t_list **begin_list, int (*cmp)());
+%define NULL 0x0
+
+; void ft_list_sort(t_list **begin_list, int (*cmp)(void*, void*));
 _ft_list_sort:
-	; t_list *fast
-	; t_list *slow
-	; t_list *middle
-	sub  rsp, 24
+	; t_list *slow   : rax = *begin_list
+	; t_list *fast   : rbx = (*begin_list)->next
+	; t_list *middle : rsp + 0
 
-	cmp  rdi, 0x0
-	je   FT_LIST_SORT_END
-	cmp  [rdi], 0x0
-	je   FT_LIST_SORT_END
-	cmp  [[rdi] + 8], 0x0  ; use tmp register
-	je   FT_LIST_SORT_END
+	; === base condition ===
+	cmp  rdi, NULL
+	je   FT_LIST_SORT_END              ; if begin_list == NULL return
+	mov  rax, [rdi]
+	cmp  rax, NULL
+	je   FT_LIST_SORT_END              ; if *begin_list == NULL return
+	mov  rbx, [rax + 8]
+	cmp  rbx, NULL
+	je   FT_LIST_SORT_END              ; if (*begin_list)->next == NULL return
 
-	mov  [rsp], [[rdi] + 8]
-	mov  [rsp + 8], [rdi]
-FT_GET_MIDDLE_LOOP: 
-	mov  [rsp], [rsp + 8]
-	cmp  [rsp], 0x0
-	je   FT_GET_MIDDLE_LOOP_END
-	mov  [rsp], [rsp + 8]
-	mov  [rsp + 8], [[rsp + 8] + 8] ; i want c pointers back plz
-FT_GET_MIDDLE_LOOP_END:
-	mov  [rsp + 16], [[rsp + 8] + 8]
-	mov  [[rsp + 8] + 8], 0x0
+	; === find list middle loop ===
+FT_LIST_SORT_MIDDLE_LOOP:              ; do {
+	mov  rbx, [rbx + 8]                ;     fast = fast->next
+	cmp  rbx, NULL
+	je   FT_LIST_SORT_MIDDLE_LOOP_END  ;     if fast == NULL break
+	mov  rbx, [rbx + 8]                ;     fast = fast->next
+	mov  rax, [rax + 8]                ;     slow = slow->next
+	cmp  rbx, NULL
+	jne  FT_LIST_SORT_MIDDLE_LOOP      ; } while (fast != NULL)
+FT_LIST_SORT_MIDDLE_LOOP_END:
 
-	push rdi
-	call _ft_list_sort
-	pop  rdi
+	; create a stack frame for local variable to store middle address
+	push rbp
+	mov  rbp, rsp
+	sub  rsp, 8
 
-	push rdi
-	mov  rdi, [rsp + 16]
-	call _ft_list_sort
-	pop  rdi
+	; store middle in [rbp - 8]
+	mov  rcx, [rax + 8]
+	mov  [rbp - 8], rcx
+	mov  qword [rax + 8], NULL         ; slow->next = NULL
 
+	; === sorting both child list ===
 	push rdi
 	push rsi
-	mov  rdx, rsi
-	mov  rdi, [rdi]
-	mov  rsi, [rsp + 16]
-	call _merge_sorted_list
+	call _ft_list_sort                 ; ft_list_sort(begin_list, cmp)
+	lea  rdi, [rbp - 8]
+	call _ft_list_sort                 ; ft_list_sort(&middle, cmp)
 	pop  rsi
 	pop  rdi
 
-	mov  [rdi], rax
+	; === merging sorted child ===
+	push rdi
+	push rsi
+	mov  rdi, [rdi]                    ; arg_1 = *begin_list
+	mov  rdx, rsi                      ; arg_3 = cmp
+	mov  rsi, [rbp - 8]                ; arg_2 = middle
+	call _st_merge_sorted_list
+	pop  rsi
+	pop  rdi
+	mov  [rdi], rax                    ; *begin_list = st_merge_sorted_list(...);
 
-	add rsp, 24
+	; restoring stack frame
+	mov  rsp, rbp
+	pop  rbp
 FT_LIST_SORT_END:
 	ret
 
 
-
-; t_list *merge_sorted_list(t_list* l1, t_list* l2, int (*cmp)())
-_merge_sorted_list:
-	sub  rsp, 8
-
-	cmp  rdi, 0x0
-	je   MERGE_SORTED_LIST_RETURN_L2
-	cmp  rsi, 0x0
-	je   MERGE_SORTED_LIST_RETURN_L1
+; t_list *st_merge_sorted_list(t_list* l1, t_list* l2, int (*cmp)(void*, void*))
+_st_merge_sorted_list:
+	cmp  rdi, NULL
+	je   MERGE_SORTED_LIST_RETURN_L2   ; if l1 == NULL return l2
+	cmp  rsi, NULL
+	je   MERGE_SORTED_LIST_RETURN_L1   ; if l2 == NULL return l1
 
 	push rdi
 	push rsi
-	mov  rdi, [rdi]
-	mov  rsi, [rsi]
-	call rdx        ; cmp
+	push rdx
+	mov  rdi, [rdi + 0]                ; l1->data
+	mov  rsi, [rsi + 0]                ; l2->data
+	xor  rax, rax
+	call rdx                           ; cmp
+	pop  rdx
 	pop  rsi
 	pop  rdi
 
-	cmp  rax, 0x0
-	jl   L1_LT_L2
+	cmp  eax, 0
+	jl   MERGE_SORTED_LIST_L1_LT_L2
 
-; L1_GE_L2
-	mov  rsp, rsi
+	; if l1 >= l2
+	push rsi                           ; save l2
+	mov  rsi, [rsi + 8]                ; l2 = l2->next
+	call _st_merge_sorted_list         ; merge_sorted_list(l1, l2->next, cmp)
+	pop  rsi                           ; restore rsi
+	mov  [rsi + 8], rax
+	mov  rax, rsi
+	jmp  MERGE_SORTED_LIST_END
+	; else
+MERGE_SORTED_LIST_L1_LT_L2:
 	push rdi
-	push rsi
 	mov  rdi, [rdi + 8]
-	call _merge_sorted_list
-	pop  rsi
+	call _st_merge_sorted_list         ; merge_sort_list(l1->next, l2, cmp)
 	pop  rdi
-	mov  [rsp + 8], rax
+	mov  [rdi + 8], rax
+	mov  rax, rdi
 	jmp  MERGE_SORTED_LIST_END
 
-L1_LT_L2:
-	mov  rsp, rdi
-	push rdi
-	push rsi
-	mov  rsi, [rsi + 8]
-	call _merge_sorted_list
-	pop  rsi
-	pop  rdi
-	mov  [rsp + 8], rax
-
-MERGE_SORTED_LIST_END:
-	mov  rax, [rsp]
-	add  rsp, 8
-	ret
 MERGE_SORTED_LIST_RETURN_L1:
 	mov  rax, rdi
 	ret
 MERGE_SORTED_LIST_RETURN_L2:
 	mov  rax, rsi
+MERGE_SORTED_LIST_END:
 	ret
