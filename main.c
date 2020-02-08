@@ -6,7 +6,7 @@
 /*   By: cacharle <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/22 02:02:24 by cacharle          #+#    #+#             */
-/*   Updated: 2020/02/08 02:58:50 by cacharle         ###   ########.fr       */
+/*   Updated: 2020/02/08 20:36:59 by cacharle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,13 +141,25 @@ int ft_atoi_base(const char*, const char*);
 void ft_list_push_front(t_list **begin_list, void *data);
 int ft_list_size(t_list *begin_list);
 void ft_list_sort(t_list **begin_list, int (*cmp)());
+void ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void*));
 
 int compar(void *a, void *b)
 {
 	printf("---\n");
 	printf("a = %p, b = %p\n", a, b);
 	printf("*a = %d, *b = %d\n", *(int*)a, *(int*)b);
-	return *(int*)a - *(int*)b;
+	int c =  *(int*)a - *(int*)b;
+	printf("ret %d\n", c);
+	return c;
+}
+
+void free_fct(void *data)
+{
+	printf("free: %p\n", data);
+	printf("free data %d\n", *(int*)data);
+	free(data);
+	printf("end free\n");
+	fflush(stdout);
 }
 
 int main()
@@ -184,7 +196,7 @@ int main()
 	/* printf("%d\n", h); */
 	/* printf("%s\n", h); */
 	/* free(h); */
-    /*  */
+	
 
 	/* printf("%d\n", check_base("01")); */
 
@@ -194,9 +206,20 @@ int main()
 	/* system("vmmap a.out"); */
 	/* t_list *a = list_from_format("-1 2 3 98 1234 12 123 4 123 -123 2 5 6 0 1 3 4"); */
 	/* t_list *a = list_from_format("1"); */
-	t_list *a = NULL;
-	printf("%d: ", ft_list_size(a)); list_print(a); putchar('\n');
-	ft_list_sort(&a, compar);
-	printf("%d: ", ft_list_size(a)); list_print(a); putchar('\n');
+	/* t_list *a = NULL; */
+	/* printf("%d: ", ft_list_size(a)); list_print(a); putchar('\n'); */
+	/* ft_list_sort(&a, compar); */
+	/* printf("%d: ", ft_list_size(a)); list_print(a); putchar('\n'); */
+
+	t_list *a = list_from_format("1 2 3 4 1 2 3 1");
+	int data_ref = 1;
+	printf("f: %p\n", a->data);
+	/* free(a->data); */
+	printf("%p\n", &data_ref);
+	list_print(a); putchar('\n');
+	ft_list_remove_if(&a, &data_ref, compar, free_fct);
+	list_print(a); putchar('\n');
+
+	list_destroy(a);
 	return 0;
 }

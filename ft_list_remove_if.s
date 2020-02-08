@@ -12,47 +12,83 @@
 
 global _ft_list_remove_if
 
-; ft_list_remove_if(t_list **begin_list, void *data_ref,
-;                   int (*cmp)(), void (*free_fct)(void *))
+extern _free
 
+%define NULL 0x0
+
+%macro EXTERN_FUNCTION_SAVE 0
+	push rdi
+	push rsi
+	push rdx
+	push rcx
+%endmacro
+
+%macro EXTERN_FUNCTION_SAVE_END 0
+	pop  rcx
+	pop  rdx
+	pop  rsi
+	pop  rdi
+%endmacro
+
+; ft_list_remove_if(t_list **begin_list, void *data_ref,
+;                   int (*cmp)(void *data, void *data_ref),
+;                   void (*free_fct)(void *))
 _ft_list_remove_if:
+	; t_list *saved_next
+
+	; === prolog ===
+	push rbp
+	mov  rbp, rsp
 	sub  rsp, 8
 
-	cmp  rdi, 0x0
+	; === base condition ===
+	cmp  rdi, NULL
 	je   FT_LIST_REMOVE_IF_END
-	cmp  [rdi], 0x0
+	cmp  qword [rdi], NULL
 	je   FT_LIST_REMOVE_IF_END
 
-	push rdi
-	mov  rdi, [rdi] + 8 ;&(*begin_list)->val
-	call rdx
-	pop  rdi
-	cmp  rax, 0x0
+	; === compare (*begin_list)->data and data_ref
+	EXTERN_FUNCTION_SAVE
+	mov  rdi, [rdi]
+	mov  rdi, [rdi + 0] 
+	call rdx                         ; cmp((*begin_list)->data, data_ref)
+	EXTERN_FUNCTION_SAVE_END
+	cmp  rax, 0
 	je   FT_LIST_REMOVE_IF_REMOVE
 
-
-	mov  rdi, [rdi] + 8
-	call _ft_list_remove_if
-	add  rsp, 8
-	ret
-
-FT_LIST_REMOVE_IF_REMOVE:
-	mov [rsp], [rdi] + 8  ; saved_next = (*begin_list)->next
-
-	push rdi
-	mov  rdi, [[rdi]]
-	call rcx              ; free_fct((*begin_list)->data)
-	pop  rdi
-
+	; === next element ===
 	push rdi
 	mov  rdi, [rdi]
-	call _free            ; free(*begin_list)
+	lea  rdi, [rdi + 8]
+	call _ft_list_remove_if
+	pop  rdi
+	jmp  FT_LIST_REMOVE_IF_END
+
+	; === remove head and go next ===
+FT_LIST_REMOVE_IF_REMOVE:
+	mov  rax, [rdi]                    ; rax = *begin_list
+	mov  rax, [rax + 8]                ; rax = rax->next
+	mov  [rbp - 8], rax                ; saved_next = (*begin_list)->next
+
+	push rdi                           ; strange behavior
+	EXTERN_FUNCTION_SAVE
+	mov  rdi, [rdi]
+	mov  rdi, [rdi + 0]
+	call rcx                           ; free_fct((*begin_list)->data)
+	EXTERN_FUNCTION_SAVE_END
 	pop  rdi
 
-	mov  [rdi], [rsp]     ; *begin_list = saved_next
+	EXTERN_FUNCTION_SAVE
+	mov  rdi, [rdi]
+	call _free                         ; free(*begin_list)
+	EXTERN_FUNCTION_SAVE_END
 
+	mov rax, [rbp - 8]
+	mov [rdi], rax
 	call _ft_list_remove_if
 
 FT_LIST_REMOVE_IF_END:
-	add  rsp, 8
+	; === epilog ===
+	mov  rsp, rbp
+	pop  rbp
 	ret

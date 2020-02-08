@@ -14,5 +14,5 @@ Clone the test [repository](https://github.com/HappyTramp/libasm_test) next to t
 
 ```
 cd libasm_test
-make run
+make runbonus
 ```
