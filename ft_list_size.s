@@ -10,10 +10,17 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-global _ft_list_size
+%ifdef __LINUX__
+    %define M_FT_LIST_SIZE ft_list_size
+%else
+    %define M_FT_LIST_SIZE _ft_list_size
+%endif
 
+global M_FT_LIST_SIZE
+
+section .text
 ; int ft_list_size(t_list *begin_list);
-_ft_list_size:
+M_FT_LIST_SIZE:
 	xor eax, eax
 FT_LIST_SIZE_LOOP:
 	cmp rdi, 0

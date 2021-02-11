@@ -10,9 +10,17 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-global _ft_list_remove_if
+%ifdef __LINUX__
+    %define M_FT_LIST_REMOVE_IF ft_list_remove_if
+    %define M_FREE free
+%else
+    %define M_FT_LIST_REMOVE_IF _ft_list_remove_if
+    %define M_FREE _free
+%endif
 
-extern _free
+global M_FT_LIST_REMOVE_IF
+
+extern M_FREE
 
 %define NULL 0x0
 
@@ -33,7 +41,7 @@ extern _free
 ; ft_list_remove_if(t_list **begin_list, void *data_ref,
 ;                   int (*cmp)(void *data, void *data_ref),
 ;                   void (*free_fct)(void *))
-_ft_list_remove_if:
+M_FT_LIST_REMOVE_IF:
 	; t_list *saved_next
 
 	; === prolog ===
@@ -50,7 +58,7 @@ _ft_list_remove_if:
 	; === compare (*begin_list)->data and data_ref
 	EXTERN_FUNCTION_SAVE
 	mov  rdi, [rdi]
-	mov  rdi, [rdi + 0] 
+	mov  rdi, [rdi + 0]
 	call rdx                         ; cmp((*begin_list)->data, data_ref)
 	EXTERN_FUNCTION_SAVE_END
 	cmp  rax, 0
@@ -60,7 +68,7 @@ _ft_list_remove_if:
 	push rdi
 	mov  rdi, [rdi]
 	lea  rdi, [rdi + 8]
-	call _ft_list_remove_if
+	call M_FT_LIST_REMOVE_IF
 	pop  rdi
 	jmp  FT_LIST_REMOVE_IF_END
 
@@ -80,12 +88,12 @@ FT_LIST_REMOVE_IF_REMOVE:
 
 	EXTERN_FUNCTION_SAVE
 	mov  rdi, [rdi]
-	call _free                         ; free(*begin_list)
+	call M_FREE wrt ..plt              ; free(*begin_list)
 	EXTERN_FUNCTION_SAVE_END
 
 	mov rax, [rbp - 8]
 	mov [rdi], rax
-	call _ft_list_remove_if
+	call M_FT_LIST_REMOVE_IF
 
 FT_LIST_REMOVE_IF_END:
 	; === epilog ===

@@ -10,12 +10,18 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-global _ft_list_sort
+%ifdef __LINUX__
+    %define M_FT_LIST_SORT ft_list_sort
+%else
+    %define M_FT_LIST_SORT _ft_list_sort
+%endif
+
+global M_FT_LIST_SORT
 
 %define NULL 0x0
 
 ; void ft_list_sort(t_list **begin_list, int (*cmp)(void*, void*));
-_ft_list_sort:
+M_FT_LIST_SORT:
 	; t_list *slow   : rax = *begin_list
 	; t_list *fast   : rbx = (*begin_list)->next
 	; t_list *middle : rsp + 0
@@ -54,9 +60,9 @@ FT_LIST_SORT_MIDDLE_LOOP_END:
 	; === sorting both child list ===
 	push rdi
 	push rsi
-	call _ft_list_sort                 ; ft_list_sort(begin_list, cmp)
+	call M_FT_LIST_SORT                 ; ft_list_sort(begin_list, cmp)
 	lea  rdi, [rbp - 8]
-	call _ft_list_sort                 ; ft_list_sort(&middle, cmp)
+	call M_FT_LIST_SORT                 ; ft_list_sort(&middle, cmp)
 	pop  rsi
 	pop  rdi
 

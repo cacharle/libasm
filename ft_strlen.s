@@ -10,10 +10,17 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-global _ft_strlen
+%ifdef __LINUX__
+    %define M_FT_STRLEN ft_strlen
+%else
+    %define M_FT_STRLEN _ft_strlen
+%endif
 
+global M_FT_STRLEN
+
+section .text
 ; int ft_strlen(char *);
-_ft_strlen:
+M_FT_STRLEN:
 	mov eax, -1
 FT_STRLEN_LOOP:
 	inc eax

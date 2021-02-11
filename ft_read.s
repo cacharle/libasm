@@ -10,38 +10,38 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-global _ft_read
+%ifdef __LINUX__
+    %define M_FT_READ ft_read
+    %define M_ERRNO_LOCATION __errno_location
+    %define M_SYSCALL_READ 0x0
+%else
+    %define M_FT_READ _ft_read
+    %define M_ERRNO_LOCATION ___error
+    %define M_SYSCALL_READ 0x2000003
+%endif
 
-%define F_GETFD 1
-%define SYSCALL_READ 0x2000003
-%define SYSCALL_FCNTL 0x200005c
+extern M_ERRNO_LOCATION
 
+global M_FT_READ
+
+section .text
 ; int ft_read(int, void*, size_t);
-_ft_read:
-	cmp rdx, 0
-	je  FT_READ_NO_SIZE
-	cmp rdi, 0
-	jl  FT_READ_ERROR
-	cmp rsi, 0
-	je  FT_READ_ERROR
-
-	push rdx
-	push rsi
-	xor  rsi, rsi
-	mov  esi, F_GETFD
-	mov  rax, SYSCALL_FCNTL 
+M_FT_READ:
+	mov  rax, M_SYSCALL_READ
 	syscall
-	pop  rsi
-	pop  rdx
-	cmp  eax, 0
-	jne  FT_READ_ERROR
-
-	mov rax, SYSCALL_READ
-	syscall
+%ifdef __LINUX__
+    cmp  rax, 0
+    jl   FT_READ_ERROR
+%else
+    jc   FT_READ_ERROR
+%endif
 	ret
 FT_READ_ERROR:
-	mov rax, -1
-	ret
-FT_READ_NO_SIZE:
-	xor rax, rax
+%ifdef __LINUX__
+    neg  rax
+%endif
+    push rax
+    call M_ERRNO_LOCATION wrt ..plt
+    pop  qword [rax]
+	mov  rax, -1
 	ret

@@ -10,12 +10,20 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-extern _malloc
+%ifdef __LINUX__
+    %define M_FT_LIST_PUSH_FRONT ft_list_push_front
+    %define M_MALLOC malloc
+%else
+    %define M_FT_LIST_PUSH_FRONT _ft_list_push_front
+    %define M_MALLOC _malloc
+%endif
 
-global _ft_list_push_front
+extern M_MALLOC
+
+global M_FT_LIST_PUSH_FRONT
 
 ; void ft_list_push_front(t_list **begin_list, void *data);
-_ft_list_push_front:
+M_FT_LIST_PUSH_FRONT:
 	cmp  rdi, 0
 	je   FT_LIST_PUSH_FRONT_END
 
@@ -23,7 +31,7 @@ _ft_list_push_front:
 	push rsi
 	xor  rdi, rdi
 	mov  edi, 16
-	call _malloc
+	call M_MALLOC wrt ..plt
 	pop  rsi
 	pop  rdi
 	cmp  rax, 0

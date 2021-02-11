@@ -10,38 +10,38 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-global _ft_write
+%ifdef __LINUX__
+    %define M_FT_WRITE ft_write
+    %define M_ERRNO_LOCATION __errno_location
+    %define M_SYSCALL_WRITE 0x1
+%else
+    %define M_FT_WRITE _ft_write
+    %define M_ERRNO_LOCATION ___error
+    %define M_SYSCALL_WRITE 0x2000004
+%endif
 
-%define F_GETFD 1
-%define SYSCALL_WRITE 0x2000004
-%define SYSCALL_FCNTL 0x200005c
+extern M_ERRNO_LOCATION
 
+global M_FT_WRITE
+
+section .text
 ; int ft_write(int rdi, const void *rsi, size_t rdx);
-_ft_write:
-	cmp  rdx, 0
-	je   FT_WRITE_NO_SIZE
-	cmp  rdi, 0
-	jl   FT_WRITE_ERROR    ; fd < 0
-	cmp  rsi, 0
-	je   FT_WRITE_ERROR    ; buf == NULL
-
-	push rdx
-	push rsi
-	xor  rsi, rsi
-	mov  esi, F_GETFD
-	mov  rax, SYSCALL_FCNTL 
+M_FT_WRITE:
+	mov  rax, M_SYSCALL_WRITE
 	syscall
-	pop  rsi
-	pop  rdx
-	cmp  eax, 0
-	jne  FT_WRITE_ERROR
-
-	mov  rax, SYSCALL_WRITE
-	syscall
+%ifdef __LINUX__
+    cmp rax, 0
+    jl  FT_WRITE_ERROR
+%else
+    jc  FT_WRITE_ERROR
+%endif
 	ret
 FT_WRITE_ERROR:
+%ifdef __LINUX__
+    neg  rax
+%endif
+    push rax
+    call M_ERRNO_LOCATION wrt ..plt
+    pop  qword [rax]
 	mov  rax, -1
-	ret
-FT_WRITE_NO_SIZE:
-	mov  rax, 0
 	ret

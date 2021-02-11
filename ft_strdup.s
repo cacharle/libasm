@@ -10,30 +10,42 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-extern _ft_strlen
-extern _ft_strcpy
-extern _malloc
 
-global _ft_strdup
+%ifdef __LINUX__
+    %define M_FT_STRDUP ft_strdup
+    %define M_FT_STRLEN ft_strlen
+    %define M_FT_STRCPY ft_strcpy
+    %define M_MALLOC malloc
+%else
+    %define M_FT_STRDUP _ft_strdup
+    %define M_FT_STRLEN _ft_strlen
+    %define M_FT_STRCPY _ft_strcpy
+    %define M_MALLOC _malloc
+%endif
 
+extern M_FT_STRLEN
+extern M_FT_STRCPY
+extern M_MALLOC
+
+global M_FT_STRDUP
+
+section .text
 ; char *ft_strdup(const char *str);
-_ft_strdup:
+M_FT_STRDUP:
 	push rdi         ; save rdi because it will be overwrite for malloc
 
-	call _ft_strlen  ; rdi is still == str
+	call M_FT_STRLEN  ; rdi is still == str
 	inc  rax          ; len++ for '\0'
 
 	mov  rdi, rax     ; size to malloc
-	call _malloc
+	call M_MALLOC  wrt ..plt
 	cmp  rax, 0
 	je   FT_STRDUP_ERROR
 
 	pop  rsi          ; original str as src
 	mov  rdi, rax     ; allocated as dest
-	call _ft_strcpy
+	call M_FT_STRCPY
 	ret
 FT_STRDUP_ERROR:
 	pop  rdi
 	ret
-
-

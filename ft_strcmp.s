@@ -10,10 +10,18 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-global _ft_strcmp
 
+%ifdef __LINUX__
+    %define M_FT_STRCMP ft_strcmp
+%else
+    %define M_FT_STRCMP _ft_strcmp
+%endif
+
+global M_FT_STRCMP
+
+section .text
 ; int ft_strcmp(const char *s1, const char *s2);
-_ft_strcmp:
+M_FT_STRCMP:
 	push r12
 	push r13
 	push rcx

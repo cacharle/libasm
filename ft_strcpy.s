@@ -10,10 +10,17 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
-global _ft_strcpy
+%ifdef __LINUX__
+    %define M_FT_STRCPY ft_strcpy
+%else
+    %define M_FT_STRCPY _ft_strcpy
+%endif
 
+global M_FT_STRCPY
+
+section .text
 ; char *ft_strcpy(char *dst, const char *src);
-_ft_strcpy:
+M_FT_STRCPY:
 	push rbx
 	push rcx
 	mov  rax, rdi  ; dst

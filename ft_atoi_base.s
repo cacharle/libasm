@@ -19,7 +19,7 @@
 ; 2. pass param with regs rdi, rsi, rdx, rcx, r8, r9
 ;    if there is more pass them onto the stack in reverse order
 ; 3. use call
-; 4. restore stack state by removing passed on the stack param 
+; 4. restore stack state by removing passed on the stack param
 ; 5. return value of callee in rax
 ; 6. restore the caller-saved register and saved passed params
 ; We can assume that no other register has been altered.
@@ -37,13 +37,22 @@
 ; 5. remove local var, add to the stack the previoulsy subtracted amount.
 ; 6. use ret
 
+%ifdef __LINUX__
+    %define M_FT_STRLEN ft_strlen
+    %define M_FT_ATOI_BASE ft_atoi_base
+%else
+    %define M_FT_STRLEN _ft_strlen
+    %define M_FT_ATOI_BASE _ft_atoi_base
+%endif
 
-extern _ft_strlen
 
-global _ft_atoi_base
+extern M_FT_STRLEN
 
+global M_FT_ATOI_BASE
+
+section .text
 ; int ft_atoi_base(const char *str, const char *base);
-_ft_atoi_base:
+M_FT_ATOI_BASE:
 	; ===prolog===
 	; long int nb          (8)
 	; int      radix       (4)
@@ -95,9 +104,9 @@ FT_ATOI_BASE_SIGN_LOOP:
 	; base radix
 	push rdi
 	mov  rdi, rsi
-	call _ft_strlen
+	call M_FT_STRLEN
 	pop  rdi
-	mov  dword [rsp + 8], eax 
+	mov  dword [rsp + 8], eax
 
 	; main loop
 FT_ATOI_BASE_LOOP:
@@ -163,7 +172,7 @@ _check_base:
 	mov  dword [rsp], 0
 ; check for empty or size 1 base
 	push rdi
-	call _ft_strlen
+	call M_FT_STRLEN
 	pop  rdi
 	cmp  rax, 2
 	jl   CHECK_BASE_FALSE

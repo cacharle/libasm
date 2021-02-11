@@ -6,7 +6,7 @@
 #    By: cacharle <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/22 02:56:22 by cacharle          #+#    #+#              #
-#    Updated: 2020/02/08 20:55:14 by cacharle         ###   ########.fr        #
+#    Updated: 2021/02/11 14:50:09 by charles          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,11 @@ CC = gcc
 CCFLAGS = -g -Wall -Wextra -fomit-frame-pointer
 
 NASM = nasm
-NASMFLAGS = -f macho64
+ifeq ($(shell uname),Linux)
+	NASMFLAGS = -f elf64 -D__LINUX__=1
+else
+	NASMFLAGS = -f macho64
+endif
 
 NAME = libasm.a
 ASMSRC = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s \
@@ -26,6 +30,8 @@ ASMSRC = ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s ft_read.s \
 ASMOBJ = $(ASMSRC:.s=.o)
 
 all: $(NAME)
+
+bonus: all
 
 $(NAME): $(ASMOBJ)
 	$(LIB) $(NAME) $(ASMOBJ)
@@ -43,3 +49,5 @@ fclean: clean
 	$(RM) $(NAME)
 
 re: fclean all
+
+.PHONY: all bonus test clean fclean re
