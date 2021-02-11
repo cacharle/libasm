@@ -21,9 +21,9 @@ global M_FT_STRLEN
 section .text
 ; int ft_strlen(char *);
 M_FT_STRLEN:
-	mov eax, -1
+    mov eax, -1
 FT_STRLEN_LOOP:
-	inc eax
-	cmp byte [rdi + rax], 0  ; compare rbx[rax] and '\0'
-	jne FT_STRLEN_LOOP
-	ret
+    inc eax
+    cmp byte [rdi + rax], 0  ; compare rbx[rax] and '\0'
+    jne FT_STRLEN_LOOP
+    ret

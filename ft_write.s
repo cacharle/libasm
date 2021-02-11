@@ -27,15 +27,15 @@ global M_FT_WRITE
 section .text
 ; int ft_write(int rdi, const void *rsi, size_t rdx);
 M_FT_WRITE:
-	mov  rax, M_SYSCALL_WRITE
-	syscall
+    mov  rax, M_SYSCALL_WRITE
+    syscall
 %ifdef __LINUX__
     cmp rax, 0
     jl  FT_WRITE_ERROR
 %else
     jc  FT_WRITE_ERROR
 %endif
-	ret
+    ret
 FT_WRITE_ERROR:
 %ifdef __LINUX__
     neg  rax
@@ -43,5 +43,5 @@ FT_WRITE_ERROR:
     push rax
     call M_ERRNO_LOCATION wrt ..plt
     pop  qword [rax]
-	mov  rax, -1
-	ret
+    mov  rax, -1
+    ret

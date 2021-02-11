@@ -32,20 +32,20 @@ global M_FT_STRDUP
 section .text
 ; char *ft_strdup(const char *str);
 M_FT_STRDUP:
-	push rdi         ; save rdi because it will be overwrite for malloc
+    push rdi         ; save rdi because it will be overwrite for malloc
 
-	call M_FT_STRLEN  ; rdi is still == str
-	inc  rax          ; len++ for '\0'
+    call M_FT_STRLEN  ; rdi is still == str
+    inc  rax          ; len++ for '\0'
 
-	mov  rdi, rax     ; size to malloc
-	call M_MALLOC  wrt ..plt
-	cmp  rax, 0
-	je   FT_STRDUP_ERROR
+    mov  rdi, rax     ; size to malloc
+    call M_MALLOC  wrt ..plt
+    cmp  rax, 0
+    je   FT_STRDUP_ERROR
 
-	pop  rsi          ; original str as src
-	mov  rdi, rax     ; allocated as dest
-	call M_FT_STRCPY
-	ret
+    pop  rsi          ; original str as src
+    mov  rdi, rax     ; allocated as dest
+    call M_FT_STRCPY
+    ret
 FT_STRDUP_ERROR:
-	pop  rdi
-	ret
+    pop  rdi
+    ret

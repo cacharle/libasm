@@ -21,12 +21,12 @@ global M_FT_LIST_SIZE
 section .text
 ; int ft_list_size(t_list *begin_list);
 M_FT_LIST_SIZE:
-	xor eax, eax
+    xor eax, eax
 FT_LIST_SIZE_LOOP:
-	cmp rdi, 0
-	je  FT_LIST_SIZE_END
-	inc eax
-	mov rdi, [rdi + 8]
-	jmp FT_LIST_SIZE_LOOP
+    cmp rdi, 0
+    je  FT_LIST_SIZE_END
+    inc eax
+    mov rdi, [rdi + 8]
+    jmp FT_LIST_SIZE_LOOP
 FT_LIST_SIZE_END:
-	ret
+    ret

@@ -21,17 +21,17 @@ global M_FT_STRCPY
 section .text
 ; char *ft_strcpy(char *dst, const char *src);
 M_FT_STRCPY:
-	push rbx
-	push rcx
-	mov  rax, rdi  ; dst
-	mov  rbx, rsi  ; src
-	mov  rcx, -1
+    push rbx
+    push rcx
+    mov  rax, rdi  ; dst
+    mov  rbx, rsi  ; src
+    mov  rcx, -1
 FT_STRCPY_LOOP:
-	inc  rcx
-	mov  dl, byte [rbx + rcx]
-	mov  byte [rax + rcx], dl
-	cmp  byte [rbx + rcx], 0
-	jne  FT_STRCPY_LOOP
-	pop  rcx
-	pop  rbx
-	ret
+    inc  rcx
+    mov  dl, byte [rbx + rcx]
+    mov  byte [rax + rcx], dl
+    cmp  byte [rbx + rcx], 0
+    jne  FT_STRCPY_LOOP
+    pop  rcx
+    pop  rbx
+    ret

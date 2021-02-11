@@ -27,15 +27,15 @@ global M_FT_READ
 section .text
 ; int ft_read(int, void*, size_t);
 M_FT_READ:
-	mov  rax, M_SYSCALL_READ
-	syscall
+    mov  rax, M_SYSCALL_READ
+    syscall
 %ifdef __LINUX__
     cmp  rax, 0
     jl   FT_READ_ERROR
 %else
     jc   FT_READ_ERROR
 %endif
-	ret
+    ret
 FT_READ_ERROR:
 %ifdef __LINUX__
     neg  rax
@@ -43,5 +43,5 @@ FT_READ_ERROR:
     push rax
     call M_ERRNO_LOCATION wrt ..plt
     pop  qword [rax]
-	mov  rax, -1
-	ret
+    mov  rax, -1
+    ret
