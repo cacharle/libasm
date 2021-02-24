@@ -12,7 +12,7 @@
 
 %ifdef __LINUX__
     %define M_FT_LIST_PUSH_FRONT ft_list_push_front
-    %define M_MALLOC malloc
+    %define M_MALLOC malloc  wrt ..plt
 %else
     %define M_FT_LIST_PUSH_FRONT _ft_list_push_front
     %define M_MALLOC _malloc
@@ -31,7 +31,7 @@ M_FT_LIST_PUSH_FRONT:
     push rsi
     xor  rdi, rdi
     mov  edi, 16
-    call M_MALLOC wrt ..plt
+    call M_MALLOC
     pop  rsi
     pop  rdi
     cmp  rax, 0

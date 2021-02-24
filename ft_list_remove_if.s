@@ -12,7 +12,7 @@
 
 %ifdef __LINUX__
     %define M_FT_LIST_REMOVE_IF ft_list_remove_if
-    %define M_FREE free
+    %define M_FREE free  wrt ..plt
 %else
     %define M_FT_LIST_REMOVE_IF _ft_list_remove_if
     %define M_FREE _free
@@ -88,7 +88,7 @@ FT_LIST_REMOVE_IF_REMOVE:
 
     EXTERN_FUNCTION_SAVE
     mov  rdi, [rdi]
-    call M_FREE wrt ..plt              ; free(*begin_list)
+    call M_FREE                        ; free(*begin_list)
     EXTERN_FUNCTION_SAVE_END
 
     mov rax, [rbp - 8]

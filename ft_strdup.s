@@ -15,7 +15,7 @@
     %define M_FT_STRDUP ft_strdup
     %define M_FT_STRLEN ft_strlen
     %define M_FT_STRCPY ft_strcpy
-    %define M_MALLOC malloc
+    %define M_MALLOC malloc  wrt ..plt
 %else
     %define M_FT_STRDUP _ft_strdup
     %define M_FT_STRLEN _ft_strlen
@@ -38,7 +38,7 @@ M_FT_STRDUP:
     inc  rax          ; len++ for '\0'
 
     mov  rdi, rax     ; size to malloc
-    call M_MALLOC  wrt ..plt
+    call M_MALLOC
     cmp  rax, 0
     je   FT_STRDUP_ERROR
 

@@ -12,7 +12,7 @@
 
 %ifdef __LINUX__
     %define M_FT_READ ft_read
-    %define M_ERRNO_LOCATION __errno_location
+    %define M_ERRNO_LOCATION __errno_location  wrt ..plt
     %define M_SYSCALL_READ 0x0
 %else
     %define M_FT_READ _ft_read
@@ -41,7 +41,7 @@ FT_READ_ERROR:
     neg  rax
 %endif
     push rax
-    call M_ERRNO_LOCATION wrt ..plt
+    call M_ERRNO_LOCATION
     pop  qword [rax]
     mov  rax, -1
     ret
