@@ -10,9 +10,11 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
+%include "libasm.s"
+
 %ifdef __LINUX__
     %define M_FT_WRITE ft_write
-    %define M_ERRNO_LOCATION __errno_location  wrt ..plt
+    %define M_ERRNO_LOCATION __errno_location
     %define M_SYSCALL_WRITE 0x1
 %else
     %define M_FT_WRITE _ft_write
@@ -41,7 +43,7 @@ FT_WRITE_ERROR:
     neg  rax
 %endif
     push rax
-    call M_ERRNO_LOCATION
+    call M_ERRNO_LOCATION M_EXTERN_CALL_SUFFIX
     pop  qword [rax]
     mov  rax, -1
     ret

@@ -10,9 +10,11 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
+%include "libasm.s"
+
 %ifdef __LINUX__
     %define M_FT_READ ft_read
-    %define M_ERRNO_LOCATION __errno_location  wrt ..plt
+    %define M_ERRNO_LOCATION __errno_location
     %define M_SYSCALL_READ 0x0
 %else
     %define M_FT_READ _ft_read
@@ -41,7 +43,7 @@ FT_READ_ERROR:
     neg  rax
 %endif
     push rax
-    call M_ERRNO_LOCATION
+    call M_ERRNO_LOCATION M_EXTERN_CALL_SUFFIX
     pop  qword [rax]
     mov  rax, -1
     ret

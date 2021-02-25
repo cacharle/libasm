@@ -10,12 +10,13 @@
 ;                                                                              ;
 ; **************************************************************************** ;
 
+%include "libasm.s"
 
 %ifdef __LINUX__
     %define M_FT_STRDUP ft_strdup
     %define M_FT_STRLEN ft_strlen
     %define M_FT_STRCPY ft_strcpy
-    %define M_MALLOC malloc  wrt ..plt
+    %define M_MALLOC malloc
 %else
     %define M_FT_STRDUP _ft_strdup
     %define M_FT_STRLEN _ft_strlen
@@ -38,7 +39,7 @@ M_FT_STRDUP:
     inc  rax          ; len++ for '\0'
 
     mov  rdi, rax     ; size to malloc
-    call M_MALLOC
+    call M_MALLOC M_EXTERN_CALL_SUFFIX
     cmp  rax, 0
     je   FT_STRDUP_ERROR
 
